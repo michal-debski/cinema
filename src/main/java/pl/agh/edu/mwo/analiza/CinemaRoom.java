@@ -1,24 +1,21 @@
 package pl.agh.edu.mwo.analiza;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static pl.agh.edu.mwo.analiza.Cinema.checkingIfThisCinemaContainsCinemaRoom;
+
 public class CinemaRoom {
-    private long id;
     private final String name;
     private final String description;
-    private final int numberOfSeats;
+    private List<Seat> seatsInCinemaRoom = new ArrayList<>();
+    private List<FilmSchedule> filmSchedules = new ArrayList<>();
 
-    private int counterOfAvailableSeats;
-
-    public CinemaRoom(long id, String name, String description, int numberOfSeats) {
-        this.id = id;
+    public CinemaRoom(String name, String description) {
         this.name = name;
         this.description = description;
-        this.numberOfSeats = numberOfSeats;
-        this.counterOfAvailableSeats = numberOfSeats;
-    }
-
-
-    public int getNumberOfAvailableSeats() {
-        return numberOfSeats;
+        this.seatsInCinemaRoom = seatProducer();
+        this.filmSchedules = new ArrayList<>();
     }
 
     public String getDescription() {
@@ -29,23 +26,40 @@ public class CinemaRoom {
         return name;
     }
 
-    public long getId() {
-        return id;
+
+
+    public List<Seat> getSeatsInCinemaRoom() {
+        return seatsInCinemaRoom;
+    }
+    public Seat getSelectedSeat(String seatName) {
+        return seatsInCinemaRoom.stream().filter(seat -> seat.getName().equals(seatName)).findFirst().orElse(null);
     }
 
-    @Override
-    public String toString() {
-        return "CinemaRoom{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", numberOfSeats=" + numberOfSeats +
-                ", counterOfAvailableSeats=" + counterOfAvailableSeats +
-                '}';
+    private List<Seat> seatProducer() {
+        List<String> rowsInCinemaRoom = List.of("A", "B", "C", "D", "E", "F", "G", "H", "I", "J");
+        for (String s : rowsInCinemaRoom) {
+            for (int j = 1; j <= 10; j++) {
+                Seat seat = new Seat(s + j, true);
+                seatsInCinemaRoom.add(seat);
+            }
+        }
+        return seatsInCinemaRoom;
     }
 
-    public void decreaseAvailableSeatsBasedOnBoughtTickets(Ticket ticket) {
-        counterOfAvailableSeats =
-                this.counterOfAvailableSeats - ticket.getNumberOfSeatsForAdults() - ticket.getNumberOfSeatsForChildren();
+
+    public List<FilmSchedule> getFilmSchedules() {
+        return filmSchedules;
     }
+    public List<FilmSchedule> getFilmScheduleForGivenCinemaRoom() {
+        if (checkingIfThisCinemaContainsCinemaRoom(this.name)) {
+            return this.getFilmSchedules().stream()
+                    .filter(filmSchedule -> filmSchedule.cinemaRoom().getName().equals(this.name))
+                    .toList();
+        } else {
+            throw new RuntimeException(
+                    "Cinema room " + this.name + " is not available in this cinema"
+            );
+        }
+    }
+
 }
