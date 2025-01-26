@@ -20,30 +20,16 @@ public class Cinema {
         this.filmSchedule = new FilmSchedule();
     }
 
-    public String getCinemaName() {
-        return cinemaName;
-    }
-
-    public String getCinemaAddress() {
-        return cinemaAddress;
-    }
 
     public static List<CinemaRoom> getCinemaRooms() {
         return cinemaRooms;
     }
 
-    public List<Ticket> getTicketsForSelectedCustomer(Customer customer) {
-        List<Booking> bookings = Cinema.bookings.stream().toList();
-        List<Ticket> tickets = new ArrayList<>();
-        for (Booking booking : bookings) {
-            List<Ticket> ticketsForBooking = booking.getTicketsForBooking();
-            for (Ticket ticket : ticketsForBooking) {
-                if (ticket.getCustomer().equals(customer)) {
-                    tickets.add(ticket);
-                }
-            }
-        }
-        return tickets;
+    public static List<Ticket> getTicketsForSelectedCustomer(String email) {
+        List<Ticket> collect = bookings.stream()
+                .flatMap(booking -> booking.getTicketsForBooking().stream())
+                .toList();
+        return collect.stream().filter(t -> t.getEmail() != null && t.getEmail().equals(email)).toList();
     }
 
     public static void saveBookingInCinemaStorage(Booking newBooking) {
@@ -78,11 +64,21 @@ public class Cinema {
                 .filter(cinemaRoom -> cinemaRoom.getName().equals(cinemaRoomName))
                 .toList();
         if (!cinemaRoomList.isEmpty()) {
-            FilmDetails filmDetails = new FilmDetails(film,startAt,priceForAdult, priceForChild, cinemaRooms.stream().filter(a->a.getName().equals(cinemaRoomName)).toList().getFirst());
-            filmSchedule.addNewFilmIntoSchedule(filmDetails,cinemaRoomList.getFirst());
+            FilmDetails filmDetails = new FilmDetails(
+                    film, startAt,
+                    priceForAdult,
+                    priceForChild,
+                    cinemaRooms.stream()
+                            .filter(a -> a.getName().equals(cinemaRoomName))
+                            .toList()
+                            .getFirst()
+                            .getName()
+            );
+            filmSchedule.addNewFilmIntoSchedule(filmDetails, cinemaRoomList.getFirst());
 
         }
     }
+
     public List<FilmDetails> getFilmDetailsForNextWeek() {
         List<FilmDetails> filmDetails = filmSchedule.getFilmDetails();
         return filmDetails.stream()
@@ -93,5 +89,13 @@ public class Cinema {
 
     public FilmSchedule getFilmSchedule() {
         return filmSchedule;
+    }
+
+    public String getCinemaName() {
+        return cinemaName;
+    }
+
+    public String getCinemaAddress() {
+        return cinemaAddress;
     }
 }

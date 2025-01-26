@@ -33,9 +33,6 @@ public class FilmSchedule{
                         () -> new RuntimeException("Film not found with title: " + title + " in given date " + startDate));
     }
 
-
-
-
     public void printFilmSchedule(int day) {
         List<FilmDetails> list = this.filmDetails.stream().filter(filmDetails1 -> filmDetails1.getStartTime().getDayOfMonth() == day).toList();
         System.out.println("Please find below list with all available films");

@@ -1,47 +1,58 @@
 package pl.agh.edu.mwo.analiza;
 
 
+import java.time.LocalDateTime;
 
 public class Ticket {
 
-    private final Seat seat;
-    private final FilmDetails filmDetails;
-    private final Customer customer;
+    private final String seat;
+    private final String filmTitle;
+    private final LocalDateTime startTime;
+    private final LocalDateTime endTime;
+    private String email;
 
 
-    public Ticket(Seat seat, FilmDetails filmDetails) {
+    public Ticket(String seat, String filmTitle, LocalDateTime startTime, LocalDateTime endTime) {
         this.seat = seat;
-        this.filmDetails = filmDetails;
-        this.customer = null;
+        this.filmTitle = filmTitle;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
-    public Ticket(Seat seat, FilmDetails filmDetails, Customer customer) {
+    public Ticket(String seat, String filmTitle, LocalDateTime startTime, LocalDateTime endTime, String email) {
         this.seat = seat;
-        this.filmDetails = filmDetails;
-        this.customer = customer;
+        this.filmTitle = filmTitle;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.email = email;
     }
 
-    public FilmDetails getFilmDetails() {
-        return filmDetails;
+    public String getFilmTitle() {
+        return filmTitle;
     }
 
-    public Seat getSeat() {
+    public String getSeat() {
         return seat;
     }
-
-
 
     @Override
     public String toString() {
         return "Ticket {" +
                 "\n  seat: " + seat +
-                ",\n  film title: " + filmDetails.getFilm().title() +
-                ",\n  customer, who bought tickets: " + customer +
+                ",\n  film title: " + filmTitle+
+                ",\n  customer, who bought tickets: " + email +
                 "\n}";
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public String getEmail() {
+        return email;
     }
 
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
 }

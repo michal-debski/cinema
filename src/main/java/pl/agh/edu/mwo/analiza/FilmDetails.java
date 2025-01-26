@@ -1,7 +1,6 @@
 package pl.agh.edu.mwo.analiza;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class FilmDetails {
@@ -11,9 +10,9 @@ public class FilmDetails {
     private final LocalDateTime endTime;
     private final BigDecimal priceForAdult;
     private final BigDecimal priceForChildren;
-    private final CinemaRoom cinemaRoom;
+    private final String cinemaRoom;
 
-    public FilmDetails(Film film, LocalDateTime startTime, BigDecimal priceForAdult, BigDecimal priceForChildren, CinemaRoom cinemaRoom) {
+    public FilmDetails(Film film, LocalDateTime startTime, BigDecimal priceForAdult, BigDecimal priceForChildren, String cinemaRoom) {
         this.film = film;
         this.startTime = startTime;
         this.priceForAdult = priceForAdult;
@@ -29,10 +28,6 @@ public class FilmDetails {
 
     public LocalDateTime getStartTime() {
         return startTime;
-    }
-
-    public LocalDateTime getEndTime() {
-        return endTime;
     }
 
     public BigDecimal getPriceForAdult() {
@@ -54,10 +49,6 @@ public class FilmDetails {
                 ", priceForChildren: " + priceForChildren;
     }
 
-
-    public CinemaRoom getCinemaRoom() {
-        return cinemaRoom;
-    }
 
 
 }
