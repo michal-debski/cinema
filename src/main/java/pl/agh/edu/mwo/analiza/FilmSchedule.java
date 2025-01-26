@@ -1,17 +1,20 @@
 package pl.agh.edu.mwo.analiza;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-public record FilmSchedule(
-        String description,
-        List<FilmDetails> filmDetails,
-        CinemaRoom cinemaRoom
-) {
-    public FilmSchedule(String description, List<FilmDetails> filmDetails, CinemaRoom cinemaRoom) {
-        this.description = description;
-        this.filmDetails = filmDetails;
-        this.cinemaRoom = cinemaRoom;
-        cinemaRoom.getFilmSchedules().add(this);
+public class FilmSchedule{
+
+    private final List<FilmDetails> filmDetails;
+
+    public FilmSchedule() {
+        this.filmDetails = new ArrayList<>();
+    }
+
+
+    public void addNewFilmIntoSchedule(FilmDetails film, CinemaRoom cinemaRoom) {
+        filmDetails.add(film);
     }
 
     public List<FilmDetails> getFilmDetailsForGivenDay(int day) {
@@ -21,24 +24,27 @@ public record FilmSchedule(
                 ).toList();
     }
 
-    public List<FilmDetails> getFilmScreeningDaysFromFilmDetailsByFilmName(String title) {
-        return filmDetails.stream().filter(film -> film.getFilm().title().equals(title)).toList();
-    }
 
-
-    public boolean checkAvailableSeats(int day, String filmTitle, List<Seat> seats) {
-        FilmDetails filmDetails1 = filmDetails.stream()
-                .filter(
-                        f -> f.getFilm().title().equals(filmTitle)
-                                && f.getStartTime().getDayOfMonth() == day
-                )
+    public FilmDetails getFilmDetailsByFilmTitleInGivenDate(String title, LocalDateTime startDate) {
+        return filmDetails.stream()
+                .filter(film -> film.getFilm().title().equals(title) && film.getStartTime().equals(startDate))
                 .findFirst()
-                .orElseThrow();
-        // TODO Implement validation whether selected seats are available
-        return true;
+                .orElseThrow(
+                        () -> new RuntimeException("Film not found with title: " + title + " in given date " + startDate));
     }
 
 
 
 
+    public void printFilmSchedule(int day) {
+        List<FilmDetails> list = this.filmDetails.stream().filter(filmDetails1 -> filmDetails1.getStartTime().getDayOfMonth() == day).toList();
+        System.out.println("Please find below list with all available films");
+        for (FilmDetails details : list) {
+            System.out.println(details.toString());
+        }
+    }
+
+    public List<FilmDetails> getFilmDetails() {
+        return filmDetails;
+    }
 }

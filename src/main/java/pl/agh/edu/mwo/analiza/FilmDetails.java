@@ -1,6 +1,7 @@
 package pl.agh.edu.mwo.analiza;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class FilmDetails {
@@ -10,17 +11,17 @@ public class FilmDetails {
     private final LocalDateTime endTime;
     private final BigDecimal priceForAdult;
     private final BigDecimal priceForChildren;
+    private final CinemaRoom cinemaRoom;
 
-
-    public FilmDetails(Film film, LocalDateTime startTime, BigDecimal priceForAdult, BigDecimal priceForChildren) {
+    public FilmDetails(Film film, LocalDateTime startTime, BigDecimal priceForAdult, BigDecimal priceForChildren, CinemaRoom cinemaRoom) {
         this.film = film;
         this.startTime = startTime;
         this.priceForAdult = priceForAdult;
         this.priceForChildren = priceForChildren;
+        this.cinemaRoom = cinemaRoom;
 
         this.endTime = startTime.plus(film.duration());
     }
-
 
     public Film getFilm() {
         return film;
@@ -45,31 +46,18 @@ public class FilmDetails {
 
     @Override
     public String toString() {
-        return "FilmDetails{" +
-                ", film=" + film +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", priceForAdult=" + priceForAdult +
-                ", priceForChildren=" + priceForChildren +
-                '}';
+        return "Film:" +
+                ", title:" + film +
+                ", start time: " + startTime +
+                ", approx. end time: " + endTime +
+                ", price for adult: " + priceForAdult +
+                ", priceForChildren: " + priceForChildren;
     }
 
-    private FilmDetails createNewFilmDetails(
-            Film film,
-            LocalDateTime startTime,
-            BigDecimal priceForAdult,
-            BigDecimal priceForChildren
-    ) {
-        return new FilmDetails(film, startTime, priceForAdult, priceForChildren);
+
+    public CinemaRoom getCinemaRoom() {
+        return cinemaRoom;
     }
-//    public void editFilmTime(FilmSchedule filmSchedule, Film film, LocalDateTime newDateTime){
-//        filmSchedule.getSchedule().setDateTime(film, newDateTime);
-//    }
-    //
-//
-//    public void removeFilm(FilmSchedule filmSchedule, Long filmId){
-//        filmSchedule.removeFilm(id);
-//    }
-//
+
 
 }

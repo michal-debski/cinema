@@ -13,12 +13,12 @@ import static pl.agh.edu.mwo.analiza.Cinema.saveBookingInCinemaStorage;
 public class Booking {
     private String bookingNumber;
     private final List<Ticket> ticketsForBooking;
-    private boolean isPaid;
+    private final PaymentType paymentType;
     private static BigDecimal totalPrice;
 
-    public Booking() {
+    public Booking(PaymentType paymentType) {
+        this.paymentType =paymentType;
         this.ticketsForBooking = new ArrayList<>();
-        this.isPaid = false;
         this.bookingNumber = "";
     }
 
@@ -27,9 +27,6 @@ public class Booking {
     }
 
 
-    public boolean isPaid() {
-        return isPaid;
-    }
 
     public String getBookingNumber() {
         return bookingNumber;
@@ -44,17 +41,17 @@ public class Booking {
             List<Seat> seatsForAdults,
             FilmDetails filmDetails,
             Customer customer,
-            boolean isPaid
+            PaymentType paymentType
     ) {
-        Booking newBooking = new Booking();
+        Booking newBooking = new Booking(paymentType);
         List<Ticket> tickets = creatingTicketForBooking(seatsForChildren, seatsForAdults, filmDetails, customer);
         newBooking.bookingNumber = generateOrderNumber();
         newBooking.ticketsForBooking.addAll(tickets);
-        if (!tickets.isEmpty() && isPaid) {
+        if (!tickets.isEmpty() && newBooking.paymentType == PaymentType.ALREADY_PAID_VIA_NET) {
             newBooking.getInfoForSuccessfullyBooking();
-        } else if(!tickets.isEmpty() && !isPaid) {
+        } else if (!tickets.isEmpty() && newBooking.paymentType == PaymentType.IN_CHECKOUT) {
             newBooking.getInfoToPayAtCheckout();
-        }else if(tickets.isEmpty()) {
+        } else if (tickets.isEmpty()) {
             newBooking.getInfoAboutEmptyTicketList();
             removeBookingIfTicketsAreEmpty(newBooking);
         }
@@ -63,7 +60,6 @@ public class Booking {
 
         return newBooking;
     }
-
 
 
     private static List<Ticket> creatingTicketForBooking(List<Seat> seatsForChildren, List<Seat> seatsForAdults, FilmDetails filmDetails, Customer customer) {
@@ -78,37 +74,48 @@ public class Booking {
 
     private static void createTicketForAllSeatsForCustomerWithAccount(List<Seat> seatsForChildren, List<Seat> seatsForAdults, FilmDetails filmDetails, Customer customer, List<Ticket> tickets) {
         seatsForAdults.forEach(seat -> {
-            if(seat.isAvailable()){
+            if (seat.isAvailable()) {
                 Ticket ticket = new Ticket(seat, filmDetails, customer);
                 tickets.add(ticket);
                 Seat seat1 = ticket.getSeat();
                 seat1.lockSeat();
-            }else {
-                System.out.println("Seat: " + seat.getName() +" is already locked. Please choose another seat.");
+            } else {
+                System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
             }
         });
         seatsForChildren.forEach(seat -> {
-            if(seat.isAvailable()){
+            if (seat.isAvailable()) {
                 Ticket ticket = new Ticket(seat, filmDetails);
                 tickets.add(ticket);
                 Seat seat1 = ticket.getSeat();
                 seat1.lockSeat();
-            }else {
-                System.out.println("Seat: " + seat.getName() +" is already locked. Please choose another seat.");
+            } else {
+                System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
             }
         });
     }
 
 
-
     private static void createTicketForAllSeatsForCustomerWithoutAccount(List<Seat> seatsForChildren, List<Seat> seatsForAdults, FilmDetails filmDetails, List<Ticket> tickets) {
         seatsForAdults.forEach(seat -> {
-            Ticket ticket = new Ticket(seat, filmDetails);
-            tickets.add(ticket);
+            if (seat.isAvailable()) {
+                Ticket ticket = new Ticket(seat, filmDetails);
+                tickets.add(ticket);
+                Seat seat1 = ticket.getSeat();
+                seat1.lockSeat();
+            } else {
+                System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
+            }
         });
         seatsForChildren.forEach(seat -> {
-            Ticket ticket = new Ticket(seat, filmDetails);
-            tickets.add(ticket);
+            if (seat.isAvailable()) {
+                Ticket ticket = new Ticket(seat, filmDetails);
+                tickets.add(ticket);
+                Seat seat1 = ticket.getSeat();
+                seat1.lockSeat();
+            } else {
+                System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
+            }
         });
     }
 
@@ -133,6 +140,7 @@ public class Booking {
         });
         System.out.println(stringBuilder.append("\n You booked following seats: ").append(seatsForBooking));
     }
+
     private void getInfoAboutEmptyTicketList() {
         System.out.println("We don't have any tickets in storage, because you select locked seats");
     }
@@ -152,5 +160,8 @@ public class Booking {
         return new Random().nextInt(max - min) + min;
     }
 
-
+    public enum PaymentType {
+        IN_CHECKOUT,
+        ALREADY_PAID_VIA_NET
+    }
 }

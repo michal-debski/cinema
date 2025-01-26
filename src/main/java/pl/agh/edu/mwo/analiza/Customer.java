@@ -1,7 +1,11 @@
 package pl.agh.edu.mwo.analiza;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 
+import static pl.agh.edu.mwo.analiza.Booking.processBooking;
 
 
 public class Customer extends Person {
@@ -22,24 +26,17 @@ public class Customer extends Person {
         return getName() + " " + getSurname() + "  email:" + getEmail();
     }
 
-    public List<FilmDetails> getAvailableFilmScheduleForGivenTime(FilmSchedule filmSchedule, int day) {
-        return filmSchedule.getFilmDetailsForGivenDay(day);
-    }
+
     public static FilmDetails getFilmDetailsForGivenFilmDetailsList(Film film, List<FilmDetails> filmDetailsList) {
         return filmDetailsList.stream()
                 .filter(fd -> fd.getFilm().equals(film))
                 .findFirst().orElseThrow(()-> new IllegalArgumentException("Film not found"));
     }
 
-//    public void reserveSeatsForFilm(FilmDetails filmDetails, Film film, int day, List<Seat> seatsForAdults, List<Seat> seatsForChildren) {
-//        List<Seat> listOfSeatsToBook = Stream.of(seatsForAdults, seatsForChildren).flatMap(List::stream).toList();
-//        boolean b = checkAvailableSeats(filmSchedule, day, film, listOfSeatsToBook);
-//        if (b == true) {
-//            processReservation();
-//        } else {
-//            return new NoAvailableSeatException("Seats are not available for this film for given time");
-//        }
-//   }
+    public void reserveSeatsForFilm(FilmSchedule filmSchedule, Film film, LocalDateTime localDateTime, List<Seat> seatsForAdults, List<Seat> seatsForChildren, Booking.PaymentType paymentType) {
+        FilmDetails filmDetailsByFilmTitleInGivenDate = filmSchedule.getFilmDetailsByFilmTitleInGivenDate(film.title(), localDateTime);
+        processBooking(seatsForChildren,seatsForAdults,filmDetailsByFilmTitleInGivenDate, this, paymentType);
+   }
 
 
 //    private List<Ticket> getTicketsForCustomer(String email) {
