@@ -1,4 +1,6 @@
-package pl.agh.edu.mwo.analiza;
+package pl.agh.edu.mwo;
+
+import pl.agh.edu.mwo.analiza.*;
 
 import java.math.BigDecimal;
 import java.time.Duration;
@@ -14,8 +16,8 @@ public class Main {
         CinemaRoom cinemaRoom = cinema.createNewCinemaRoom("Vinci", "Duża");
         CinemaRoom cinemaRoom1 = cinema.createNewCinemaRoom("Zamojski", "Duża");
 
-        Customer customer = new Customer("Adam", "Kowalski", "jkowal@gmail.com", "+48 000 111 000", 20, true);
-        Customer customer1 = new Customer("Adam", "Kowalski", "jkowal@gmail.com", "+48 000 111 000", 21, true);
+        Customer customer = new Customer("Jan", "Kowalski", "jkowal@gmail.com", "+48 000 111 000", 20, true);
+        Customer customer1 = new Customer("Adam", "Kowalski", "akowal@gmail.com", "+48 000 111 000", 21, true);
 
         Film film1 = new Film("AAA", "VA", "fajny film1", Duration.ofMinutes(60));
         Film film2 = new Film("BBB", "VB", "fajny film2", Duration.ofMinutes(70));
@@ -35,15 +37,18 @@ public class Main {
                 List.of(cinemaRoom.getSelectedSeat("A2"), cinemaRoom.getSelectedSeat("A4")),
                 Booking.PaymentType.ALREADY_PAID_VIA_NET
         );
-        customer.reserveSeatsForFilm(
+        customer1.reserveSeatsForFilm(
                 cinema.getFilmSchedule(),
                 film1,
                 LocalDateTime.of(2025, 1, 27, 1, 20),
-                List.of(cinemaRoom.getSelectedSeat("A1"), cinemaRoom.getSelectedSeat("A3")),
-                List.of(cinemaRoom.getSelectedSeat("A2"), cinemaRoom.getSelectedSeat("A4")),
+                List.of(cinemaRoom.getSelectedSeat("A5"), cinemaRoom.getSelectedSeat("A6")),
+                List.of(cinemaRoom.getSelectedSeat("A7"), cinemaRoom.getSelectedSeat("A8")),
                 Booking.PaymentType.ALREADY_PAID_VIA_NET
         );
+        System.out.println(customer.getTicketsForCustomer(customer.getEmail()));
+        System.out.println(customer1.getTicketsForCustomer(customer1.getEmail()));
     }
+
 
 
 }

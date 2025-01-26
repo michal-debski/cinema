@@ -26,6 +26,7 @@ public class Seat{
     public String toString() {
         return name ;
     }
+
     public void lockSeat() {
         this.setAvailable(false);
     }

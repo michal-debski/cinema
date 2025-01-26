@@ -75,20 +75,18 @@ public class Booking {
     private static void createTicketForAllSeatsForCustomerWithAccount(List<Seat> seatsForChildren, List<Seat> seatsForAdults, FilmDetails filmDetails, Customer customer, List<Ticket> tickets) {
         seatsForAdults.forEach(seat -> {
             if (seat.isAvailable()) {
-                Ticket ticket = new Ticket(seat, filmDetails, customer);
+                Ticket ticket = new Ticket(seat.getName(), filmDetails.getFilm().title(),filmDetails.getStartTime(), filmDetails.getStartTime(), customer.getEmail());
                 tickets.add(ticket);
-                Seat seat1 = ticket.getSeat();
-                seat1.lockSeat();
+                seat.lockSeat();
             } else {
                 System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
             }
         });
         seatsForChildren.forEach(seat -> {
             if (seat.isAvailable()) {
-                Ticket ticket = new Ticket(seat, filmDetails);
+                Ticket ticket = new Ticket(seat.getName(), filmDetails.getFilm().title(),filmDetails.getStartTime(), filmDetails.getStartTime(), customer.getEmail());
                 tickets.add(ticket);
-                Seat seat1 = ticket.getSeat();
-                seat1.lockSeat();
+                seat.lockSeat();
             } else {
                 System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
             }
@@ -99,20 +97,18 @@ public class Booking {
     private static void createTicketForAllSeatsForCustomerWithoutAccount(List<Seat> seatsForChildren, List<Seat> seatsForAdults, FilmDetails filmDetails, List<Ticket> tickets) {
         seatsForAdults.forEach(seat -> {
             if (seat.isAvailable()) {
-                Ticket ticket = new Ticket(seat, filmDetails);
+                Ticket ticket = new Ticket(seat.getName(), filmDetails.getFilm().title(),filmDetails.getStartTime(), filmDetails.getStartTime());
                 tickets.add(ticket);
-                Seat seat1 = ticket.getSeat();
-                seat1.lockSeat();
+                seat.lockSeat();
             } else {
                 System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
             }
         });
         seatsForChildren.forEach(seat -> {
             if (seat.isAvailable()) {
-                Ticket ticket = new Ticket(seat, filmDetails);
+                Ticket ticket = new Ticket(seat.getName(), filmDetails.getFilm().title(),filmDetails.getStartTime(), filmDetails.getStartTime());
                 tickets.add(ticket);
-                Seat seat1 = ticket.getSeat();
-                seat1.lockSeat();
+                seat.lockSeat();
             } else {
                 System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
             }
@@ -134,8 +130,8 @@ public class Booking {
     private void getInfoForSuccessfullyBooking() {
         List<String> seatsForBooking = new ArrayList<>();
         StringBuilder stringBuilder = new StringBuilder("Successfully booking process for booking number: " + bookingNumber + ". See you in front of the screen.");
-        ticketsForBooking.forEach(b -> {
-            String seat = b.getSeat().getName();
+        ticketsForBooking.forEach(ticket -> {
+            String seat = ticket.getSeat();
             seatsForBooking.add(seat);
         });
         System.out.println(stringBuilder.append("\n You booked following seats: ").append(seatsForBooking));

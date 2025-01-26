@@ -39,9 +39,9 @@ public class Customer extends Person {
    }
 
 
-//    private List<Ticket> getTicketsForCustomer(String email) {
-//        return getTicketsForSelectedCustomer(email);
-//    }
+    public List<Ticket> getTicketsForCustomer(String email) {
+        return Cinema.getTicketsForSelectedCustomer(email);
+    }
 
 
 }
