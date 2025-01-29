@@ -1,5 +1,6 @@
 package pl.agh.edu.mwo.analiza;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +18,10 @@ public class FilmSchedule{
         filmDetails.add(film);
     }
 
-    public List<FilmDetails> getFilmDetailsForGivenDay(int day) {
+    public List<FilmDetails> getFilmDetailsForGivenDate(int day,int month, int year) {
         return filmDetails.stream()
                 .filter(
-                        film -> film.getStartTime().getDayOfMonth() == day
+                        film -> film.getStartTime().toLocalDate().equals(LocalDate.of(year, month, day))
                 ).toList();
     }
 
@@ -40,6 +41,7 @@ public class FilmSchedule{
             System.out.println(details.toString());
         }
     }
+
 
     public List<FilmDetails> getFilmDetails() {
         return filmDetails;

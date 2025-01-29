@@ -1,9 +1,7 @@
 package pl.agh.edu.mwo.analiza;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static pl.agh.edu.mwo.analiza.Booking.processBooking;
 
@@ -17,7 +15,7 @@ public class Customer extends Person {
     }
 
 
-    public boolean isHasAccount() {
+    public boolean hasAccount() {
         return hasAccount;
     }
 
@@ -39,8 +37,8 @@ public class Customer extends Person {
    }
 
 
-    public List<Ticket> getTicketsForCustomer(String email) {
-        return Cinema.getTicketsForSelectedCustomer(email);
+    public static List<Ticket> getTicketsForCustomer(Customer customer) {
+        return Cinema.getListOfTicketsForGivenEmail(customer.getEmail());
     }
 
 

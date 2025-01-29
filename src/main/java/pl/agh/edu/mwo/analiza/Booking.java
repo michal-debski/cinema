@@ -64,7 +64,7 @@ public class Booking {
 
     private static List<Ticket> creatingTicketForBooking(List<Seat> seatsForChildren, List<Seat> seatsForAdults, FilmDetails filmDetails, Customer customer) {
         List<Ticket> tickets = new ArrayList<>();
-        if (customer.isHasAccount()) {
+        if (customer.hasAccount()) {
             createTicketForAllSeatsForCustomerWithAccount(seatsForChildren, seatsForAdults, filmDetails, customer, tickets);
         } else {
             createTicketForAllSeatsForCustomerWithoutAccount(seatsForChildren, seatsForAdults, filmDetails, tickets);

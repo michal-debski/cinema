@@ -37,11 +37,11 @@ public class Ticket {
 
     @Override
     public String toString() {
-        return "Ticket {" +
+        return "Ticket :" +
                 "\n  seat: " + seat +
                 ",\n  film title: " + filmTitle+
                 ",\n  customer, who bought tickets: " + email +
-                "\n}";
+                "\n";
     }
 
     public String getEmail() {

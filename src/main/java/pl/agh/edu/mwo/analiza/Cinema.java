@@ -25,7 +25,7 @@ public class Cinema {
         return cinemaRooms;
     }
 
-    public static List<Ticket> getTicketsForSelectedCustomer(String email) {
+    public static List<Ticket> getListOfTicketsForGivenEmail(String email) {
         List<Ticket> collect = bookings.stream()
                 .flatMap(booking -> booking.getTicketsForBooking().stream())
                 .toList();
@@ -59,20 +59,22 @@ public class Cinema {
         }
     }
 
-    public void addNewFilmIntoFilmSchedule(Film film, LocalDateTime startAt, BigDecimal priceForAdult, BigDecimal priceForChild, String cinemaRoomName) {
+    public void addNewFilmIntoFilmSchedule(Film film, LocalDateTime startAt, BigDecimal priceForAdult, BigDecimal priceForChild, String cinemaRoomName, FilmDetails.ScreeningType screeningType) {
         List<CinemaRoom> cinemaRoomList = getCinemaRooms().stream()
                 .filter(cinemaRoom -> cinemaRoom.getName().equals(cinemaRoomName))
                 .toList();
         if (!cinemaRoomList.isEmpty()) {
             FilmDetails filmDetails = new FilmDetails(
-                    film, startAt,
+                    film,
+                    startAt,
                     priceForAdult,
                     priceForChild,
                     cinemaRooms.stream()
                             .filter(a -> a.getName().equals(cinemaRoomName))
                             .toList()
                             .getFirst()
-                            .getName()
+                            .getName(),
+                    screeningType
             );
             filmSchedule.addNewFilmIntoSchedule(filmDetails, cinemaRoomList.getFirst());
 
