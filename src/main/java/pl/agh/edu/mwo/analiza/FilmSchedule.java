@@ -7,15 +7,11 @@ import java.util.List;
 
 public class FilmSchedule{
 
-    private final List<FilmDetails> filmDetails;
-
-    public FilmSchedule() {
-        this.filmDetails = new ArrayList<>();
-    }
+    private List<FilmDetails> filmDetails= new ArrayList<>();
 
 
-    public void addNewFilmIntoSchedule(FilmDetails film, CinemaRoom cinemaRoom) {
-        filmDetails.add(film);
+    public void addNewFilmIntoSchedule(FilmDetails film) {
+        this.filmDetails.add(film);
     }
 
     public List<FilmDetails> getFilmDetailsForGivenDate(int day,int month, int year) {

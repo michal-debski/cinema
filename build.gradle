@@ -10,8 +10,15 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.slf4j:slf4j-api:2.0.9' // SLF4J API
+    implementation 'ch.qos.logback:logback-classic:1.4.11' // Logback (SLF4J implementation)
+    implementation 'org.projectlombok:lombok:1.18.30' // Lombok for @Slf4j
+    annotationProcessor 'org.projectlombok:lombok:1.18.30' // Required for annotation processing
+
+
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
+
 }
 
 test {

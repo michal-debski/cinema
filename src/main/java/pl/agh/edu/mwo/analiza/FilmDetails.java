@@ -43,12 +43,20 @@ public class FilmDetails {
 
     @Override
     public String toString() {
-        return "Film:" +
-                ", title:" + film +
+        return "\nFilm: " +
+                "title: " + film +
                 ", start time: " + startTime +
                 ", approx. end time: " + endTime +
                 ", price for adult: " + priceForAdult +
                 ", priceForChildren: " + priceForChildren;
+    }
+
+    public String getCinemaRoom() {
+        return cinemaRoom;
+    }
+
+    public ScreeningType getScreeningType() {
+        return screeningType;
     }
 
     public enum ScreeningType{
