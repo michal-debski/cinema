@@ -1,8 +1,13 @@
 package pl.agh.edu.mwo.analiza;
 
 
-import java.time.LocalDateTime;
+import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Slf4j
 public class Ticket {
 
     private final String seat;
@@ -54,5 +59,50 @@ public class Ticket {
 
     public LocalDateTime getEndTime() {
         return endTime;
+    }
+    protected static List<Ticket> creatingTicketForBooking(List<Seat> seatsForChildren, List<Seat> seatsForAdults, FilmDetails filmDetails, Customer customer) {
+        List<Ticket> tickets = new ArrayList<>();
+        if (customer.hasAccount()) {
+            createTicketForAllSeatsForCustomerWithAccount(seatsForChildren, seatsForAdults, filmDetails, customer, tickets);
+        } else {
+            createTicketForAllSeatsForCustomerWithoutAccount(seatsForChildren, seatsForAdults, filmDetails, tickets);
+        }
+        return tickets;
+    }
+
+    private static void createTickets(List<Seat> seatsList, FilmDetails filmDetails, Customer customer, List<Ticket> tickets) {
+        seatsList.forEach(seat -> {
+            if (seat.isAvailable()) {
+                Ticket ticket = new Ticket(seat.getName(), filmDetails.getFilm().title(), filmDetails.getStartTime(), filmDetails.getStartTime(), customer.getEmail());
+                tickets.add(ticket);
+                seat.lockSeat();
+            } else {
+                System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
+            }
+        });
+    }
+
+    private static void createTicketForAllSeatsForCustomerWithAccount(List<Seat> seatsForChildren, List<Seat> seatsForAdults, FilmDetails filmDetails, Customer customer, List<Ticket> tickets) {
+        createTickets(seatsForAdults, filmDetails, customer, tickets);
+        createTickets(seatsForChildren, filmDetails, customer, tickets);
+        log.info("Created tickets for new Booking");
+    }
+
+
+    private static void createTicketForAllSeatsForCustomerWithoutAccount(List<Seat> seatsForChildren, List<Seat> seatsForAdults, FilmDetails filmDetails, List<Ticket> tickets) {
+        createTicketsForNotSpecifiedCustomer(seatsForAdults, filmDetails, tickets);
+        createTicketsForNotSpecifiedCustomer(seatsForChildren, filmDetails, tickets);
+    }
+
+    private static void createTicketsForNotSpecifiedCustomer(List<Seat> seatsList, FilmDetails filmDetails, List<Ticket> tickets) {
+        seatsList.forEach(seat -> {
+            if (seat.isAvailable()) {
+                Ticket ticket = new Ticket(seat.getName(), filmDetails.getFilm().title(), filmDetails.getStartTime(), filmDetails.getStartTime());
+                tickets.add(ticket);
+                seat.lockSeat();
+            } else {
+                System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
+            }
+        });
     }
 }
