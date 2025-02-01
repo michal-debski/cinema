@@ -1,5 +1,7 @@
 package pl.agh.edu.mwo.analiza;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,7 +11,7 @@ import java.util.Random;
 import static pl.agh.edu.mwo.analiza.Cinema.removeBookingIfTicketsAreEmpty;
 import static pl.agh.edu.mwo.analiza.Cinema.saveBookingInCinemaStorage;
 
-
+@Slf4j
 public class Booking {
     private String bookingNumber;
     private final List<Ticket> ticketsForBooking;
@@ -20,10 +22,6 @@ public class Booking {
         this.ticketsForBooking = new ArrayList<>();
         this.bookingNumber = "";
         this.isPaid = false;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
     }
 
     public BigDecimal getTotalPrice() {
@@ -52,19 +50,29 @@ public class Booking {
             FilmDetails filmDetails,
             Customer customer
     ) {
+        log.info("Starting processing new booking");
         Booking newBooking = new Booking();
         List<Ticket> tickets = creatingTicketForBooking(seatsForChildren, seatsForAdults, filmDetails, customer);
-        newBooking.bookingNumber = generateOrderNumber();
         newBooking.ticketsForBooking.addAll(tickets);
+        log.info("Number of tickets for booking: {}", newBooking.ticketsForBooking.size());
+        newBooking.bookingNumber = generateOrderNumber();
+        log.info("Added booking number: {}", newBooking.bookingNumber);
         newBooking.totalPrice = calculateTotalPrice(seatsForAdults, seatsForChildren, filmDetails);
+        log.info("Total price: {} PLN", newBooking.totalPrice);
         if (!tickets.isEmpty()) {
             newBooking.getInfoToPayAtCheckout();
+            log.info("Successfully created booking: {} with {} tickets",
+                    newBooking.bookingNumber,
+                    tickets.size()
+            );
         } else {
             newBooking.getInfoAboutEmptyTicketList();
+            log.error("Empty ticket list");
             removeBookingIfTicketsAreEmpty(newBooking);
+           log.info("Removed booking from cinema storage");
         }
         saveBookingInCinemaStorage(newBooking);
-
+        log.info("Saved booking in cinema storage");
         return newBooking;
     }
 
@@ -74,19 +82,35 @@ public class Booking {
             FilmDetails filmDetails,
             Customer customer
     ) {
+        log.info("Starting processing buying tickets");
         Booking newBooking = new Booking();
         List<Ticket> tickets = creatingTicketForBooking(seatsForChildren, seatsForAdults, filmDetails, customer);
-        newBooking.bookingNumber = generateOrderNumber();
         newBooking.ticketsForBooking.addAll(tickets);
+        log.info("Number of tickets for booking: {}",
+                newBooking.ticketsForBooking.size()
+        );
+        newBooking.bookingNumber = generateOrderNumber();
+        log.info("Booking number for this booking: {}",
+                newBooking.bookingNumber
+        );
         newBooking.totalPrice = calculateTotalPrice(seatsForAdults, seatsForChildren, filmDetails);
+        log.info("Total price: {} PLN", newBooking.totalPrice);
         if (!tickets.isEmpty()) {
             newBooking.getInfoForSuccessfullyBookedAndPaid();
+            log.info("Completed buying tickets for booking number: {} with {} tickets",
+                    newBooking.bookingNumber,
+                    tickets.size()
+            );
+
         } else {
             newBooking.getInfoAboutEmptyTicketList();
+            log.error("Empty ticket list for buying ticket process. Cannot do anything more");
             removeBookingIfTicketsAreEmpty(newBooking);
+            log.info("Removed booking from cinema storage");
+
         }
         saveBookingInCinemaStorage(newBooking);
-
+        log.info("Saved booking in cinema storage");
         return newBooking;
     }
 
@@ -101,6 +125,13 @@ public class Booking {
     }
 
 
+    public static BigDecimal calculateTotalPrice(List<Seat> seatsForAdults, List<Seat> seatsForChildren, FilmDetails filmDetails) {
+        return BigDecimal.valueOf(
+                        seatsForAdults.size()).multiply(filmDetails.getPriceForAdult())
+                .add(BigDecimal.valueOf(
+                        seatsForChildren.size()).multiply(filmDetails.getPriceForChildren()));
+    }
+
     private static List<Ticket> creatingTicketForBooking(List<Seat> seatsForChildren, List<Seat> seatsForAdults, FilmDetails filmDetails, Customer customer) {
         List<Ticket> tickets = new ArrayList<>();
         if (customer.hasAccount()) {
@@ -111,54 +142,40 @@ public class Booking {
         return tickets;
     }
 
+    private static void createTickets(List<Seat> seatsList, FilmDetails filmDetails, Customer customer, List<Ticket> tickets) {
+        seatsList.forEach(seat -> {
+            if (seat.isAvailable()) {
+                Ticket ticket = new Ticket(seat.getName(), filmDetails.getFilm().title(), filmDetails.getStartTime(), filmDetails.getStartTime(), customer.getEmail());
+                tickets.add(ticket);
+                seat.lockSeat();
+            } else {
+                System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
+            }
+        });
+    }
+
     private static void createTicketForAllSeatsForCustomerWithAccount(List<Seat> seatsForChildren, List<Seat> seatsForAdults, FilmDetails filmDetails, Customer customer, List<Ticket> tickets) {
-        seatsForAdults.forEach(seat -> {
-            if (seat.isAvailable()) {
-                Ticket ticket = new Ticket(seat.getName(), filmDetails.getFilm().title(), filmDetails.getStartTime(), filmDetails.getStartTime(), customer.getEmail());
-                tickets.add(ticket);
-                seat.lockSeat();
-            } else {
-                System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
-            }
-        });
-        seatsForChildren.forEach(seat -> {
-            if (seat.isAvailable()) {
-                Ticket ticket = new Ticket(seat.getName(), filmDetails.getFilm().title(), filmDetails.getStartTime(), filmDetails.getStartTime(), customer.getEmail());
-                tickets.add(ticket);
-                seat.lockSeat();
-            } else {
-                System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
-            }
-        });
+        createTickets(seatsForAdults, filmDetails, customer, tickets);
+        createTickets(seatsForChildren, filmDetails, customer, tickets);
+        log.info("Created tickets for new Booking");
     }
 
 
     private static void createTicketForAllSeatsForCustomerWithoutAccount(List<Seat> seatsForChildren, List<Seat> seatsForAdults, FilmDetails filmDetails, List<Ticket> tickets) {
-        seatsForAdults.forEach(seat -> {
-            if (seat.isAvailable()) {
-                Ticket ticket = new Ticket(seat.getName(), filmDetails.getFilm().title(), filmDetails.getStartTime(), filmDetails.getStartTime());
-                tickets.add(ticket);
-                seat.lockSeat();
-            } else {
-                System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
-            }
-        });
-        seatsForChildren.forEach(seat -> {
-            if (seat.isAvailable()) {
-                Ticket ticket = new Ticket(seat.getName(), filmDetails.getFilm().title(), filmDetails.getStartTime(), filmDetails.getStartTime());
-                tickets.add(ticket);
-                seat.lockSeat();
-            } else {
-                System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
-            }
-        });
+        createTicketsForNotSpecifiedCustomer(seatsForAdults, filmDetails, tickets);
+        createTicketsForNotSpecifiedCustomer(seatsForChildren, filmDetails, tickets);
     }
 
-    public static BigDecimal calculateTotalPrice(List<Seat> seatsForAdults, List<Seat> seatsForChildren, FilmDetails filmDetails) {
-        return BigDecimal.valueOf(
-                        seatsForAdults.size()).multiply(filmDetails.getPriceForAdult())
-                .add(BigDecimal.valueOf(
-                        seatsForChildren.size()).multiply(filmDetails.getPriceForChildren()));
+    private static void createTicketsForNotSpecifiedCustomer(List<Seat> seatsList, FilmDetails filmDetails, List<Ticket> tickets) {
+        seatsList.forEach(seat -> {
+            if (seat.isAvailable()) {
+                Ticket ticket = new Ticket(seat.getName(), filmDetails.getFilm().title(), filmDetails.getStartTime(), filmDetails.getStartTime());
+                tickets.add(ticket);
+                seat.lockSeat();
+            } else {
+                System.out.println("Seat: " + seat.getName() + " is already locked. Please choose another seat.");
+            }
+        });
     }
 
     private void getInfoToPayAtCheckout() {
