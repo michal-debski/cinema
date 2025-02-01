@@ -42,9 +42,11 @@ public class Main {
         cinema.addNewFilmIntoFilmSchedule(film9, LocalDateTime.of(2025, 2, 19, 1, 20), BigDecimal.valueOf(11), BigDecimal.valueOf(17), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_VIP);
 
 
-        System.out.println(cinema.getFilmSchedule().getFilmDetailsForGivenDate(1, 2, 2025));
         System.out.println("----------------------------------");
+        //Cinema should show the film schedule for next week
         cinema.printFilmScheduleForNextWeek();
+        System.out.println("----------------------------------");
+        //Customer with account should be able to book and buy the tickets
         customer.reserveSeatsForFilm(
                 cinema.getFilmSchedule(),
                 film1,
@@ -53,6 +55,7 @@ public class Main {
                 List.of(cinemaRoom.getSelectedSeat("A2"), cinemaRoom.getSelectedSeat("A4"))
 
         );
+        //Customer without account should be able to book and buy tickets
         customer1.buyTickets(
                 cinema.getFilmSchedule(),
                 film6,
@@ -60,10 +63,17 @@ public class Main {
                 List.of(cinemaRoom.getSelectedSeat("A5"), cinemaRoom.getSelectedSeat("A6")),
                 List.of(cinemaRoom.getSelectedSeat("A7"), cinemaRoom.getSelectedSeat("A8"))
         );
-
+        //Customer with account should see his/her tickets on the list
         System.out.println(customer.getMyTickets());
+        System.out.println("----------------------------------");
+        //Cinema should see the all bookings in its storage
         cinema.displayAllBookings();
+        System.out.println("----------------------------------");
+        //Cinema should see all tickets for given customer
         System.out.println(getListOfTicketsForGivenEmail(customer.getEmail()));
+
+        //Customer without account cannot see his/her tickets, so the list with tickets should be empty
+        System.out.println(customer1.getMyTickets());
     }
 }
 
