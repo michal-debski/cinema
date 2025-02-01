@@ -2,6 +2,7 @@ package pl.agh.edu.mwo.analiza;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class FilmDetails {
 
@@ -23,7 +24,7 @@ public class FilmDetails {
 
         this.endTime = startTime.plus(film.duration());
     }
-
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     public Film getFilm() {
         return film;
     }
@@ -40,15 +41,18 @@ public class FilmDetails {
         return priceForChildren;
     }
 
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
 
     @Override
     public String toString() {
         return "\nFilm: " +
                 "title: " + film +
-                ", start time: " + startTime +
-                ", approx. end time: " + endTime +
-                ", price for adult: " + priceForAdult +
-                ", priceForChildren: " + priceForChildren;
+                ", start time: " + startTime.format(formatter) +
+                ", approx. end time: " + endTime.format(formatter) +
+                ", price for adult: " + priceForAdult  + " PLN"+
+                ", priceForChildren: " + priceForChildren + " PLN";
     }
 
     public String getCinemaRoom() {

@@ -17,12 +17,11 @@ public class Cinema {
     private final String cinemaAddress;
     private static final List<Booking> bookings = new ArrayList<>();
     private static final List<CinemaRoom> cinemaRooms = new ArrayList<>();
-    private final FilmSchedule filmSchedule;
+    private FilmSchedule filmSchedule = new FilmSchedule();
 
     public Cinema(String cinemaAddress, String cinemaName) {
         this.cinemaAddress = cinemaAddress;
         this.cinemaName = cinemaName;
-        this.filmSchedule = new FilmSchedule();
     }
 
 
@@ -55,7 +54,7 @@ public class Cinema {
 
     public void displayAllBookings() {
         bookings.forEach(booking ->
-                System.out.println("Booking Number: " + booking.getBookingNumber() + " isPaid: " + booking.isPaid())
+                System.out.println("Booking Number: " + booking.getBookingNumber() + ", is Paid: " + booking.isPaid())
         );
     }
 
@@ -65,10 +64,6 @@ public class Cinema {
         return cinemaRoom;
     }
 
-    public static boolean checkingIfThisCinemaContainsCinemaRoom(String name) {
-        return getCinemaRooms().stream()
-                .anyMatch(cinemaRoom1 -> cinemaRoom1.getName().equals(name));
-    }
 
     public static void removeBookingIfTicketsAreEmpty(Booking booking) {
         if (booking.getTicketsForBooking().isEmpty()) {
@@ -84,15 +79,19 @@ public class Cinema {
             String cinemaRoomName,
             FilmDetails.ScreeningType screeningType
     ) {
-        List<CinemaRoom> cinemaRoomList = getCinemaRooms().stream()
-                .filter(cinemaRoom -> cinemaRoom.getName().equals(cinemaRoomName))
-                .toList();
-        List<FilmDetails> filmDetailsListForCinemaRoomAndGivenDate = filmSchedule.getFilmDetails().stream()
-                .filter(filmDetails -> filmDetails.getStartTime().equals(startAt)
-                        && filmDetails.getCinemaRoom().equals(cinemaRoomName))
-                .toList();
 
-        if (filmDetailsListForCinemaRoomAndGivenDate.isEmpty()) {
+        LocalDateTime endAt = startAt.plusMinutes(film.duration().toMinutes());
+        boolean isOverlapping = filmSchedule.getFilmDetails().stream()
+                .filter(filmDetails -> filmDetails.getCinemaRoom().equals(cinemaRoomName)) // tylko w danej sali
+                .anyMatch(existingFilm -> {
+                    LocalDateTime existingStart = existingFilm.getStartTime();
+                    LocalDateTime existingEnd = existingStart.plusMinutes(existingFilm.getFilm().duration().toMinutes());
+
+                    return (startAt.isBefore(existingEnd) && endAt.isAfter(existingStart));
+                });
+
+
+        if (!isOverlapping) {
             FilmDetails filmDetails = new FilmDetails(
                     film,
                     startAt,
@@ -100,22 +99,22 @@ public class Cinema {
                     priceForChild,
                     cinemaRooms.stream()
                             .filter(a -> a.getName().equals(cinemaRoomName))
-                            .toList()
-                            .getFirst()
+                            .findFirst()
+                            .orElseThrow(() -> new NoCinemaRoomFoundException("Cinema room not found"))
                             .getName(),
                     screeningType
             );
             filmSchedule.addNewFilmIntoSchedule(filmDetails);
         } else {
-            log.error("You cannot add film in the schedule for selected Cinema room: {} and date: {}. " +
-                            "Please add film: " + film.title() + "in another date or cinemaRoom.",
+            log.error("You cannot add film: " + film.title() + " in the schedule for selected Cinema room: {} and date: {}. " +
+                            "Please add film: " + film.title() + " in another date",
                     cinemaRoomName,
                     startAt);
         }
 
     }
 
-    public void printFilmScheduleForNextWeek(){
+    public void printFilmScheduleForNextWeek() {
 
         List<FilmDetails> filmDetailsForNextWeek = getFilmDetailsForNextWeek();
         System.out.println("Film schedule for next week: \n----------------------------------");
@@ -123,16 +122,17 @@ public class Cinema {
                 .map(t -> t.getStartTime().toLocalDate())
                 .collect(Collectors.toSet());
 
-       for (LocalDate localDate : localDates) {
-           System.out.println(localDate);
-           List<FilmDetails> list = new ArrayList<>(filmDetailsForNextWeek.stream()
-                   .filter(t -> t.getStartTime().toLocalDate().equals(localDate))
-                   .toList());
-           list.forEach(System.out::println);
-           System.out.println("\n");
-       }
+        for (LocalDate localDate : localDates) {
+            System.out.println(localDate);
+            List<FilmDetails> list = new ArrayList<>(filmDetailsForNextWeek.stream()
+                    .filter(t -> t.getStartTime().toLocalDate().equals(localDate))
+                    .toList());
+            list.forEach(System.out::println);
+            System.out.println("\n");
+        }
 
     }
+
 
     private List<FilmDetails> getFilmDetailsForNextWeek() {
         List<FilmDetails> filmDetails = filmSchedule.getFilmDetails();
