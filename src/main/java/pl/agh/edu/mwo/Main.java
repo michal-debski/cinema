@@ -72,7 +72,8 @@ public class Main {
         //Cinema should see all tickets for given customer
         System.out.println(getListOfTicketsForGivenEmail(customer.getEmail()));
 
-        //Customer without account cannot see his/her tickets, so the list with tickets should be empty
+        //Customer without account cannot see his/her tickets, so the list with tickets should be
+        System.out.println("----------------------------------");
         System.out.println(customer1.getMyTickets());
     }
 }
