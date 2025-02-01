@@ -5,15 +5,27 @@ import java.time.Duration;
 public record Film (
 
         String title,
-        String filmType,
+        FilmType filmType,
         String description,
         Duration duration
 ) {
     @Override
     public String toString() {
         return  title + '\'' +
-                ", filmType: '" + filmType + '\'' +
-                ", description: '" + description + '\'' +
+                ", filmType: '" + filmType.name + '\'' +
                 ", duration: " + duration.getSeconds()/3600 +" h";
+    }
+
+    public enum FilmType {
+        COMEDY("Comedy"),
+        DRAMA("Drama"),
+        ROMANCE("Romance"),
+        HISTORY("History");
+
+        final String name;
+        FilmType(String name) {
+            this.name = name;
+        }
+
     }
 }
