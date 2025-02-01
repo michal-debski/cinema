@@ -24,7 +24,7 @@ public class FilmDetails {
 
         this.endTime = startTime.plus(film.duration());
     }
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
     public Film getFilm() {
         return film;
     }
@@ -49,8 +49,8 @@ public class FilmDetails {
     public String toString() {
         return "\nFilm: " +
                 "title: " + film +
-                ", start time: " + startTime.format(formatter) +
-                ", approx. end time: " + endTime.format(formatter) +
+                ", start time: " + startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) +
+                ", approx. end time: " + endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) +
                 ", price for adult: " + priceForAdult  + " PLN"+
                 ", priceForChildren: " + priceForChildren + " PLN";
     }

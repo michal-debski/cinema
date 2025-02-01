@@ -13,10 +13,6 @@ public class Seat{
         return isAvailable;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
-
     public Seat(String name, boolean isAvailable) {
         this.name = name;
         this.isAvailable = isAvailable;
@@ -28,6 +24,10 @@ public class Seat{
     }
 
     public void lockSeat() {
-        this.setAvailable(false);
+        this.setAvailable();
+    }
+
+    private void setAvailable() {
+        isAvailable = false;
     }
 }
