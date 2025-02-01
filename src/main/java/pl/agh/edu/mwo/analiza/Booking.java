@@ -116,7 +116,7 @@ public class Booking {
 
     public static void processPayment(BigDecimal totalPrice, Booking booking) {
         if (totalPrice != null) {
-            System.out.println("You succefully paid the booking with total price " + totalPrice);
+            System.out.println("You successfully paid the booking with total price " + totalPrice + " PLN");
             booking.setPaid(true);
         } else {
             System.out.println("You cannot pay, because total price is null");
