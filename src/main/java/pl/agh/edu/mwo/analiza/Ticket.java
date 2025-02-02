@@ -46,7 +46,7 @@ public class Ticket {
                 "\n  seat: " + seat +
                 ",\n  film title: " + filmTitle+
                 ",\n  customer, who bought tickets: " + email +
-                "";
+                "\n";
     }
 
     public String getEmail() {
