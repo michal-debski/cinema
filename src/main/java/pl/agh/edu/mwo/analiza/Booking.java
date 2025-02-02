@@ -134,7 +134,7 @@ public class Booking {
 
     private void getInfoToPayAtCheckout() {
         System.out.println("Successfully booking process for booking number: " + bookingNumber +
-                ". You should be paid in checkout before the screening. Total price: " + totalPrice + " PLN");
+                ". You should pay in checkout before the screening. Total price: " + totalPrice + " PLN");
     }
 
     private void getInfoForSuccessfullyBookedAndPaid() {
