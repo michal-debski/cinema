@@ -6,22 +6,21 @@ import java.util.List;
 
 public class FilmSchedule {
 
-    private List<FilmDetails> filmDetails = new ArrayList<>();
-
+    private final List<FilmDetails> schedule = new ArrayList<>();
 
     public void addNewFilmIntoSchedule(FilmDetails film) {
-        this.filmDetails.add(film);
+        this.schedule.add(film);
     }
 
     public FilmDetails getFilmDetailsByFilmTitleInGivenDate(String title, LocalDateTime startDate) {
-        return filmDetails.stream()
+        return schedule.stream()
                 .filter(film -> film.getFilm().title().equals(title) && film.getStartTime().equals(startDate))
                 .findFirst()
                 .orElseThrow(
                         () -> new RuntimeException("Film not found with title: " + title + " in given date " + startDate));
     }
 
-    public List<FilmDetails> getFilmDetails() {
-        return filmDetails;
+    public List<FilmDetails> getSchedule() {
+        return schedule;
     }
 }

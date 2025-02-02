@@ -26,13 +26,6 @@ public class Customer extends Person {
         return getName() + " " + getSurname() + "  email:" + getEmail();
     }
 
-
-    public static FilmDetails getFilmDetailsForGivenFilmDetailsList(Film film, List<FilmDetails> filmDetailsList) {
-        return filmDetailsList.stream()
-                .filter(fd -> fd.getFilm().equals(film))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("Film not found"));
-    }
-
     public void reserveSeatsForFilm(
             FilmSchedule filmSchedule,
             Film film,
