@@ -125,15 +125,12 @@ public class Booking {
 
     }
 
-
     public static BigDecimal calculateTotalPrice(List<Seat> seatsForAdults, List<Seat> seatsForChildren, FilmDetails filmDetails) {
         return BigDecimal.valueOf(
                         seatsForAdults.size()).multiply(filmDetails.getPriceForAdult())
                 .add(BigDecimal.valueOf(
                         seatsForChildren.size()).multiply(filmDetails.getPriceForChildren()));
     }
-
-
 
     private void getInfoToPayAtCheckout() {
         System.out.println("Successfully booking process for booking number: " + bookingNumber +

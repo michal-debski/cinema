@@ -51,7 +51,7 @@ public class FilmDetails {
                 "title: " + film +
                 ", start time: " + startTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) +
                 ", approx. end time: " + endTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")) +
-                ", price for adult: " + priceForAdult  + " PLN"+
+                ", price for adult: " + priceForAdult + " PLN" +
                 ", priceForChildren: " + priceForChildren + " PLN";
     }
 
@@ -63,10 +63,20 @@ public class FilmDetails {
         return screeningType;
     }
 
-    public enum ScreeningType{
-        SCREENING_3D,
-        SCREENING_2D,
-        SCREENING_VIP
+    public enum ScreeningType {
+        SCREENING_3D("3D"),
+        SCREENING_2D("2D"),
+        SCREENING_VIP("VIP");
+
+        final String name;
+
+        ScreeningType(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
 }
