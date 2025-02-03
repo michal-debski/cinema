@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static pl.agh.edu.mwo.analiza.Booking.*;
+import static pl.agh.edu.mwo.analiza.BookingService.*;
 
 
 public class Customer extends Person {
