@@ -41,12 +41,13 @@ public class Cinema {
         return cinemaAddress;
     }
 
+
     public static List<Ticket> getListOfTicketsForGivenEmail(String email) {
         System.out.println("All tickets for selected customer with email: " + email);
-        List<Ticket> collect = bookings.stream()
+        List<Ticket> allTickets = bookings.stream()
                 .flatMap(booking -> booking.getTicketsForBooking().stream())
                 .toList();
-        return collect.stream().filter(t -> t.getEmail() != null && t.getEmail().equals(email)).toList();
+        return allTickets.stream().filter(t -> t.getEmail() != null && t.getEmail().equals(email)).toList();
     }
 
     public static void saveBookingInCinemaStorage(Booking newBooking) {
@@ -83,7 +84,7 @@ public class Cinema {
 
         LocalDateTime endAt = startAt.plusMinutes(film.duration().toMinutes());
         boolean isOverlapping = filmSchedule.getSchedule().stream()
-                .filter(filmDetails -> filmDetails.getCinemaRoom().equals(cinemaRoomName)) // tylko w danej sali
+                .filter(filmDetails -> filmDetails.getCinemaRoom().equals(cinemaRoomName))
                 .anyMatch(existingFilm -> {
                     LocalDateTime existingStart = existingFilm.getStartTime();
                     LocalDateTime existingEnd = existingStart.plusMinutes(existingFilm.getFilm().duration().toMinutes());

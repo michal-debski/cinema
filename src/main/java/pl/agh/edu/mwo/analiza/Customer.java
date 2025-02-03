@@ -33,6 +33,7 @@ public class Customer extends Person {
             List<Seat> seatsForAdults,
             List<Seat> seatsForChildren
     ) {
+
         FilmDetails filmDetailsByFilmTitleInGivenDate = filmSchedule.getFilmDetailsByFilmTitleInGivenDate(film.title(), localDateTime);
         processBooking(seatsForChildren, seatsForAdults, filmDetailsByFilmTitleInGivenDate, this);
     }

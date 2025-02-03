@@ -64,6 +64,8 @@ public class Main {
                 List.of(cinemaRoom.getSelectedSeat("A7"), cinemaRoom.getSelectedSeat("A8"))
         );
 
+        System.out.println("----------------------------------");
+
         //Cinema should see the all bookings in its storage
         cinema.displayAllBookings();
         System.out.println("----------------------------------");
