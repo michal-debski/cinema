@@ -41,7 +41,6 @@ public class Cinema {
         return cinemaAddress;
     }
 
-
     public static List<Ticket> getListOfTicketsForGivenEmail(String email) {
         System.out.println("All tickets for selected customer with email: " + email);
         List<Ticket> allTickets = bookings.stream()

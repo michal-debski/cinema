@@ -88,7 +88,7 @@ public class BookingService {
 
     }
 
-    private static BigDecimal calculateTotalPrice(List<Seat> seatsForAdults, List<Seat> seatsForChildren, FilmDetails filmDetails) {
+    public static BigDecimal calculateTotalPrice(List<Seat> seatsForAdults, List<Seat> seatsForChildren, FilmDetails filmDetails) {
         return BigDecimal.valueOf(
                         seatsForAdults.size()).multiply(filmDetails.getPriceForAdult())
                 .add(BigDecimal.valueOf(
