@@ -23,3 +23,4 @@ Application allows creating multiple cinemas with multiple cinema rooms.
 -  User saving for cinema storage will be added (for now hasAccount field is implemented in Customer class).
 -  A database will also be added and consideration will be given to expanding the application to a web application using Spring Boot.
 ### CLASSES DIAGRAM:
+![CINEMA_DIAGRAM](cinema-diagram.png)
