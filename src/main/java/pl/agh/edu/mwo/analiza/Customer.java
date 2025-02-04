@@ -27,40 +27,41 @@ public class Customer extends Person {
     }
 
     public void reserveSeatsForFilm(
-            FilmSchedule filmSchedule,
+            Cinema cinema,
             Film film,
             LocalDateTime localDateTime,
             List<Seat> seatsForAdults,
             List<Seat> seatsForChildren
     ) {
 
-        FilmDetails filmDetailsByFilmTitleInGivenDate = filmSchedule.getFilmDetailsByFilmTitleInGivenDate(film.title(), localDateTime);
-        processBooking(seatsForChildren, seatsForAdults, filmDetailsByFilmTitleInGivenDate, this);
+        FilmDetails filmDetailsByFilmTitleInGivenDate = cinema.getFilmSchedule().getFilmDetailsByFilmTitleInGivenDate(film.title(), localDateTime);
+        processBooking(cinema, seatsForChildren, seatsForAdults, filmDetailsByFilmTitleInGivenDate, this);
     }
 
     public void buyTickets(
-            FilmSchedule filmSchedule,
+            Cinema cinema,
             Film film,
             LocalDateTime localDateTime,
             List<Seat> seatsForAdults,
             List<Seat> seatsForChildren
     ) {
-        FilmDetails filmDetailsByFilmTitleInGivenDate = filmSchedule.getFilmDetailsByFilmTitleInGivenDate(film.title(), localDateTime);
-        payForTickets(seatsForAdults, seatsForChildren, filmDetailsByFilmTitleInGivenDate);
+        FilmDetails filmDetailsByFilmTitleInGivenDate = cinema.getFilmSchedule().getFilmDetailsByFilmTitleInGivenDate(film.title(), localDateTime);
+        payForTickets(cinema, seatsForAdults, seatsForChildren, filmDetailsByFilmTitleInGivenDate);
+    }
+
+    public List<Ticket> checkMyTicketsInGivenCinema(Cinema cinema) {
+        return cinema.getListOfTicketsForGivenEmail(this.getEmail());
     }
 
     private void payForTickets(
+            Cinema cinema,
             List<Seat> seatsForAdults,
             List<Seat> seatsForChildren,
             FilmDetails filmDetailsByFilmTitleInGivenDate
     ) {
-        Booking booking = processBuyingTicket(seatsForAdults, seatsForChildren, filmDetailsByFilmTitleInGivenDate, this);
+        Booking booking = processBuyingTicket(cinema, seatsForAdults, seatsForChildren, filmDetailsByFilmTitleInGivenDate, this);
         BigDecimal totalPrice = booking.getTotalPrice();
         processPayment(totalPrice, booking);
-    }
-
-    public List<Ticket> getMyTickets() {
-        return Cinema.getListOfTicketsForGivenEmail(this.getEmail());
     }
 
 
