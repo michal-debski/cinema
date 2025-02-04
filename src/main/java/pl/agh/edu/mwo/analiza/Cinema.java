@@ -15,8 +15,8 @@ public class Cinema {
 
     private final String cinemaName;
     private final String cinemaAddress;
-    private static final List<Booking> bookings = new ArrayList<>();
-    private static final List<CinemaRoom> cinemaRooms = new ArrayList<>();
+    private final List<Booking> bookings = new ArrayList<>();
+    private final List<CinemaRoom> cinemaRooms = new ArrayList<>();
     private final FilmSchedule filmSchedule = new FilmSchedule();
 
     public Cinema(String cinemaAddress, String cinemaName) {
@@ -25,7 +25,7 @@ public class Cinema {
     }
 
 
-    public static List<CinemaRoom> getCinemaRooms() {
+    public  List<CinemaRoom> getCinemaRooms() {
         return cinemaRooms;
     }
 
@@ -42,7 +42,7 @@ public class Cinema {
     }
 
 
-    public static List<Ticket> getListOfTicketsForGivenEmail(String email) {
+    public List<Ticket> getListOfTicketsForGivenEmail(String email) {
         System.out.println("All tickets for selected customer with email: " + email);
         List<Ticket> allTickets = bookings.stream()
                 .flatMap(booking -> booking.getTicketsForBooking().stream())
@@ -50,7 +50,7 @@ public class Cinema {
         return allTickets.stream().filter(t -> t.getEmail() != null && t.getEmail().equals(email)).toList();
     }
 
-    public static void saveBookingInCinemaStorage(Booking newBooking) {
+    public void saveBookingInCinemaStorage(Booking newBooking) {
         bookings.add(newBooking);
     }
 
@@ -67,7 +67,7 @@ public class Cinema {
     }
 
 
-    public static void removeBookingIfTicketsAreEmpty(Booking booking) {
+    public void removeBookingIfTicketsAreEmpty(Booking booking) {
         if (booking.getTicketsForBooking().isEmpty()) {
             bookings.remove(booking);
         }

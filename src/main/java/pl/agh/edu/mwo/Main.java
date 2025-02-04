@@ -7,8 +7,6 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static pl.agh.edu.mwo.analiza.Cinema.getListOfTicketsForGivenEmail;
-
 public class Main {
     public static void main(String[] args) {
 
@@ -31,15 +29,15 @@ public class Main {
         Film film8 = new Film("La La Land", Film.FilmType.ROMANCE, "Film romantyczny", Duration.ofMinutes(100));
         Film film9 = new Film("Gladiator II", Film.FilmType.DRAMA, "Film dramatyczny", Duration.ofMinutes(100));
 
-        cinema.addNewFilmIntoFilmSchedule(film1, LocalDateTime.of(2025, 2, 6, 1, 20), BigDecimal.valueOf(11), BigDecimal.valueOf(17), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_2D);
-        cinema.addNewFilmIntoFilmSchedule(film2, LocalDateTime.of(2025, 2, 7, 2, 20), BigDecimal.valueOf(11), BigDecimal.valueOf(17), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_3D);
-        cinema.addNewFilmIntoFilmSchedule(film3, LocalDateTime.of(2025, 2, 2, 3, 20), BigDecimal.valueOf(11), BigDecimal.valueOf(17), cinemaRoom1.getName(), FilmDetails.ScreeningType.SCREENING_2D);
-        cinema.addNewFilmIntoFilmSchedule(film4, LocalDateTime.of(2025, 2, 3, 4, 20), BigDecimal.valueOf(44), BigDecimal.valueOf(28), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_VIP);
-        cinema.addNewFilmIntoFilmSchedule(film5, LocalDateTime.of(2025, 2, 10, 1, 20), BigDecimal.valueOf(44), BigDecimal.valueOf(28), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_VIP);
-        cinema.addNewFilmIntoFilmSchedule(film6, LocalDateTime.of(2025, 2, 2, 1, 20), BigDecimal.valueOf(44), BigDecimal.valueOf(28), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_VIP);
-        cinema.addNewFilmIntoFilmSchedule(film7, LocalDateTime.of(2025, 2, 3, 1, 20), BigDecimal.valueOf(44), BigDecimal.valueOf(28), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_VIP);
-        cinema.addNewFilmIntoFilmSchedule(film8, LocalDateTime.of(2025, 2, 20, 1, 20), BigDecimal.valueOf(44), BigDecimal.valueOf(28), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_VIP);
-        cinema.addNewFilmIntoFilmSchedule(film9, LocalDateTime.of(2025, 2, 19, 1, 20), BigDecimal.valueOf(44), BigDecimal.valueOf(28), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_VIP);
+        cinema.addNewFilmIntoFilmSchedule(film1, LocalDateTime.of(2025, 2, 6, 15, 0), BigDecimal.valueOf(11), BigDecimal.valueOf(17), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_2D);
+        cinema.addNewFilmIntoFilmSchedule(film2, LocalDateTime.of(2025, 2, 7, 16, 0), BigDecimal.valueOf(11), BigDecimal.valueOf(17), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_3D);
+        cinema.addNewFilmIntoFilmSchedule(film3, LocalDateTime.of(2025, 2, 21, 18, 0), BigDecimal.valueOf(11), BigDecimal.valueOf(17), cinemaRoom1.getName(), FilmDetails.ScreeningType.SCREENING_2D);
+        cinema.addNewFilmIntoFilmSchedule(film4, LocalDateTime.of(2025, 2, 5, 12, 0), BigDecimal.valueOf(44), BigDecimal.valueOf(28), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_VIP);
+        cinema.addNewFilmIntoFilmSchedule(film5, LocalDateTime.of(2025, 2, 10, 11, 0), BigDecimal.valueOf(44), BigDecimal.valueOf(28), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_VIP);
+        cinema.addNewFilmIntoFilmSchedule(film6, LocalDateTime.of(2025, 2, 11, 9, 0), BigDecimal.valueOf(44), BigDecimal.valueOf(28), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_VIP);
+        cinema.addNewFilmIntoFilmSchedule(film7, LocalDateTime.of(2025, 2, 11, 19, 0), BigDecimal.valueOf(44), BigDecimal.valueOf(28), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_VIP);
+        cinema.addNewFilmIntoFilmSchedule(film8, LocalDateTime.of(2025, 2, 14, 21, 0), BigDecimal.valueOf(44), BigDecimal.valueOf(28), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_VIP);
+        cinema.addNewFilmIntoFilmSchedule(film9, LocalDateTime.of(2025, 2, 19, 20, 0), BigDecimal.valueOf(44), BigDecimal.valueOf(28), cinemaRoom.getName(), FilmDetails.ScreeningType.SCREENING_VIP);
 
 
         System.out.println("----------------------------------");
@@ -48,18 +46,18 @@ public class Main {
         System.out.println("----------------------------------");
         //Customer with account should be able to book and buy the tickets
         customer.reserveSeatsForFilm(
-                cinema.getFilmSchedule(),
-                film1,
-                LocalDateTime.of(2025, 2, 6, 1, 20),
+                cinema,
+                film9,
+                LocalDateTime.of(2025, 2, 19, 20, 0),
                 List.of(cinemaRoom.getSelectedSeat("A1")),
                 List.of(cinemaRoom.getSelectedSeat("A2"), cinemaRoom.getSelectedSeat("A4"))
 
         );
         //Customer without account should be able to book and buy tickets
         customer1.buyTickets(
-                cinema.getFilmSchedule(),
-                film6,
-                LocalDateTime.of(2025, 2, 2, 1, 20),
+                cinema,
+                film8,
+                LocalDateTime.of(2025, 2, 14, 21, 0),
                 List.of(cinemaRoom.getSelectedSeat("A5"), cinemaRoom.getSelectedSeat("A6")),
                 List.of(cinemaRoom.getSelectedSeat("A7"), cinemaRoom.getSelectedSeat("A8"))
         );
@@ -70,14 +68,14 @@ public class Main {
         cinema.displayAllBookings();
         System.out.println("----------------------------------");
         //Customer with account should see his/her tickets on the list
-        System.out.println(customer.getMyTickets());
+        System.out.println(customer.checkMyTicketsInGivenCinema(cinema));
         System.out.println("----------------------------------");
         //Cinema should see all tickets for given customer
-        System.out.println(getListOfTicketsForGivenEmail(customer.getEmail()));
+        System.out.println(cinema.getListOfTicketsForGivenEmail(customer.getEmail()));
 
         //Customer without account cannot see his/her tickets, so the list with tickets should be
         System.out.println("----------------------------------");
-        System.out.println(customer1.getMyTickets());
+        System.out.println(customer1.checkMyTicketsInGivenCinema(cinema));
     }
 }
 

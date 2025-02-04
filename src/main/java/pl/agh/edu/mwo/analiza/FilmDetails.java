@@ -6,13 +6,13 @@ import java.time.format.DateTimeFormatter;
 
 public class FilmDetails {
 
-    private final Film film;
-    private final LocalDateTime startTime;
-    private final LocalDateTime endTime;
-    private final BigDecimal priceForAdult;
-    private final BigDecimal priceForChildren;
-    private final String cinemaRoom;
-    private final ScreeningType screeningType;
+    private Film film;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private BigDecimal priceForAdult;
+    private BigDecimal priceForChildren;
+    private String cinemaRoom;
+    private ScreeningType screeningType;
 
     public FilmDetails(Film film, LocalDateTime startTime, BigDecimal priceForAdult, BigDecimal priceForChildren, String cinemaRoom, ScreeningType screeningType) {
         this.film = film;

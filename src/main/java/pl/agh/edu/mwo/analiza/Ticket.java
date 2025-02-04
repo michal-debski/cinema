@@ -10,10 +10,10 @@ import java.util.List;
 @Slf4j
 public class Ticket {
 
-    private final String seat;
-    private final String filmTitle;
-    private final LocalDateTime startTime;
-    private final LocalDateTime endTime;
+    private String seat;
+    private String filmTitle;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private String email;
 
 

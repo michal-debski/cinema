@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static pl.agh.edu.mwo.analiza.Cinema.removeBookingIfTicketsAreEmpty;
-import static pl.agh.edu.mwo.analiza.Cinema.saveBookingInCinemaStorage;
 import static pl.agh.edu.mwo.analiza.Ticket.creatingTicketForBooking;
+
 
 @Slf4j
 public class Booking {
@@ -46,6 +45,7 @@ public class Booking {
     }
 
     public static Booking processBooking(
+            Cinema cinema,
             List<Seat> seatsForChildren,
             List<Seat> seatsForAdults,
             FilmDetails filmDetails,
@@ -69,15 +69,16 @@ public class Booking {
         } else {
             newBooking.getInfoAboutEmptyTicketList();
             log.error("Empty ticket list");
-            removeBookingIfTicketsAreEmpty(newBooking);
+            cinema.removeBookingIfTicketsAreEmpty(newBooking);
            log.info("Removed booking from cinema storage");
         }
-        saveBookingInCinemaStorage(newBooking);
+        cinema.saveBookingInCinemaStorage(newBooking);
         log.info("Saved booking in cinema storage");
         return newBooking;
     }
 
     public static Booking processBuyingTicket(
+            Cinema cinema,
             List<Seat> seatsForChildren,
             List<Seat> seatsForAdults,
             FilmDetails filmDetails,
@@ -106,11 +107,11 @@ public class Booking {
         } else {
             newBooking.getInfoAboutEmptyTicketList();
             log.error("Empty ticket list for buying ticket process. Cannot do anything more");
-            removeBookingIfTicketsAreEmpty(newBooking);
+            cinema.removeBookingIfTicketsAreEmpty(newBooking);
             log.info("Removed booking from cinema storage");
 
         }
-        saveBookingInCinemaStorage(newBooking);
+        cinema.saveBookingInCinemaStorage(newBooking);
         log.info("Saved booking in cinema storage");
         return newBooking;
     }
